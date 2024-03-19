@@ -3,14 +3,24 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import mondaySdk from "monday-sdk-js";
 import "monday-ui-react-core/dist/main.css";
-//Explore more Monday React Components here: https://style.monday.com/
-import AttentionBox from "monday-ui-react-core/dist/AttentionBox.js";
+import { Button, TextField, Dropdown, Flex, Box } from "monday-ui-react-core";
+// import { json } from "stream/consumers";
+
+/* 
+
+mutation {
+  create_item (board_id: 6274044724, group_id: "topics", item_name: "new item", column_values: "{\"text5\":\"Another Time\"}") {
+    id
+  }
+} --- this is the format for creating new items 
+*/
 
 // Usage of mondaySDK example, for more information visit here: https://developer.monday.com/apps/docs/introduction-to-the-sdk/
 const monday = mondaySdk();
 
 const App = () => {
   const [context, setContext] = useState();
+  const [boardID, setBoardID] = useState;
 
   useEffect(() => {
     // Notice this method notifies the monday platform that user gains a first value in an app.
@@ -20,6 +30,12 @@ const App = () => {
     // TODO: set up event listeners, Here`s an example, read more here: https://developer.monday.com/apps/docs/mondaylisten/
     monday.listen("context", (res) => {
       setContext(res.data);
+    });
+    monday.get("context").then((res) => {
+      setBoardID(res.data.boardId);
+
+      // test - set a new entry to the board
+      monday.set("location");
     });
   }, []);
 
@@ -31,11 +47,72 @@ const App = () => {
 
   return (
     <div className="App">
-      <AttentionBox
-        title="Hello Monday Apps!"
-        text={attentionBoxText}
-        type="success"
-      />
+      <main id="main-section">
+        {/* <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            console.log("submitted123123");
+          }}
+          id="order-form"
+        >
+          <button></button> */}
+        <section id="input-section">
+          <Box marginBottom={Box.marginBottoms.MEDIUM}>
+            <Flex>
+              <Box className="input">
+                <TextField
+                  title="First Name"
+                  placeholder="Enter Customer First Name"
+                  // requiredAsterisk={true}
+                  // required={true}
+                  size={TextField.sizes.LARGE}
+                  type={TextField.types.TEXT}
+                  className="input"
+                />
+              </Box>
+              <Box className="input" marginX={Box.marginXs.XL}>
+                <TextField
+                  title="Last Name"
+                  placeholder="Enter Customer Last Name"
+                  // requiredAsterisk={true}
+                  // required={true}
+                  size={TextField.sizes.LARGE}
+                  type={TextField.types.TEXT}
+                  className="input"
+                />
+              </Box>
+              <Box className="input">
+                <TextField
+                  title="Quantity"
+                  placeholder="Enter Quantity"
+                  // requiredAsterisk={true}
+                  // required={true}
+                  size={TextField.sizes.LARGE}
+                  type={TextField.types.NUMBER}
+                  className="input"
+                  //todo check how to validate number less than 1
+                  //todo check how to add required
+                />
+              </Box>
+            </Flex>
+          </Box>
+        </section>
+        <section id="dropdown-section">
+          <Box marginBottom={Box.marginBottoms.MEDIUM}>
+            <Dropdown />
+          </Box>
+        </section>
+        <section id="button-section">
+          <Button
+            onClick={() => {
+              // extract data from fields, save to data base, and add to form
+            }}
+          >
+            Start Order
+          </Button>
+        </section>
+        {/* </form> */}
+      </main>
     </div>
   );
 };
