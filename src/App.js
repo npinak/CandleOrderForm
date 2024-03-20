@@ -30,7 +30,7 @@ const App = () => {
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState();
   const [quantity, setQuantity] = useState();
-  const [scents, setScents] = useState();
+  const [scents, setScents] = useState([]);
   const scentValues = [
     {
       value: 1,
@@ -83,14 +83,14 @@ const App = () => {
     //todo get values from the boxes
     //todo validation
 
-    if (scents.length !== 3) {
-      monday.execute("notice", {
-        message: "Please choose 3 scents",
-        type: "error",
-        timeout: 5000,
-      });
-      return;
-    }
+    // if (scents.length !== 3) {
+    //   monday.execute("notice", {
+    //     message: "Please choose 3 scents",
+    //     type: "error",
+    //     timeout: 5000,
+    //   });
+    //   return;
+    // } ///todo re-enable
 
     const inscription = "place holder";
     // const shippingAddress = "place holder"; -- todo add if core functionality is done
@@ -98,9 +98,18 @@ const App = () => {
     const orderStatus = 0;
     const scentProfiles = scents.map((scent) => scent.value);
 
-    monday.api(
-      `mutation { create_item (board_id:${boardID}, group_id:  "topics", item_name: "New order", column_values: \"{\\\"text5\\\":\\\"${inscription}\\\",\\\"text\\\":\\\"${firstName}\\\", \\\"text6\\\":\\\"${lastName}\\\",\\\"dropdown\\\":\\\"${scentProfiles}\\\",\\\"status\\\":\\\"${orderStatus}\\\",\\\"date_1\\\":\\\"${orderReceivedDate}\\\",\\\"numbers\\\":\\\"${quantity}\\\"}\"){id}}`
-    );
+    //todo add to database
+
+    monday
+      .api(
+        `mutation { create_item (board_id:${boardID}, group_id:  "topics", item_name: "New order", column_values: \"{\\\"text5\\\":\\\"${inscription}\\\",\\\"text\\\":\\\"${firstName}\\\", \\\"text6\\\":\\\"${lastName}\\\",\\\"dropdown\\\":\\\"${scentProfiles}\\\",\\\"status\\\":\\\"${orderStatus}\\\",\\\"date_1\\\":\\\"${orderReceivedDate}\\\",\\\"numbers\\\":\\\"${quantity}\\\"}\"){id}}`
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
