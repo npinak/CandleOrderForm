@@ -1,5 +1,7 @@
 import React from "react";
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef } from "react";
+import { db } from "./utils/firebase";
+import { collection, addDoc, doc, setDoc } from "firebase/firestore";
 import "./App.css";
 import mondaySdk from "monday-sdk-js";
 import "monday-ui-react-core/dist/main.css";
@@ -64,11 +66,6 @@ const App = () => {
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    console.log(quantity);
-  }, [quantity]);
-  // delete in pr
-
-  useEffect(() => {
     monday.execute("valueCreatedForUser");
 
     monday.listen("context", (res) => {
@@ -79,7 +76,7 @@ const App = () => {
     });
   }, []);
 
-  const createNewEntry = () => {
+  const createNewEntry = async () => {
     //todo get values from the boxes
     //todo validation
 
@@ -100,16 +97,76 @@ const App = () => {
 
     //todo add to database
 
-    monday
-      .api(
+    try {
+      const createResponse = await monday.api(
         `mutation { create_item (board_id:${boardID}, group_id:  "topics", item_name: "New order", column_values: \"{\\\"text5\\\":\\\"${inscription}\\\",\\\"text\\\":\\\"${firstName}\\\", \\\"text6\\\":\\\"${lastName}\\\",\\\"dropdown\\\":\\\"${scentProfiles}\\\",\\\"status\\\":\\\"${orderStatus}\\\",\\\"date_1\\\":\\\"${orderReceivedDate}\\\",\\\"numbers\\\":\\\"${quantity}\\\"}\"){id}}`
-      )
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((error) => {
-        console.error(error);
+      );
+
+      const orderID = createResponse.data.create_item.id;
+
+      const newItemInfo = await monday.api(`query {items (ids: [${orderID}])
+        {
+          name
+              id
+              column_values{
+                id
+                value
+                text
+              }
+            }
+          }`);
+
+      const docRef = await setDoc(doc(db, `${boardID}`, `${orderID}`), {
+        data: newItemInfo.data,
       });
+
+      console.log("saved");
+      console.log(docRef); //todo delete
+    } catch (error) {
+      console.error(error);
+    }
+
+    // .then((res) => {
+    //   orderID = res.data.create_item.id;
+
+    //   // get from board
+
+    //   monday.api(`query {
+    //                 items (ids: [${orderID}]) {
+    //                   name
+    //                   id
+    //                   column_values{
+    //                     id
+    //                     value
+    //                     text
+    //                   }
+    //                 }
+    //               }`);
+
+    // store in database
+
+    /* 
+        query {
+  items (ids: [6293242150]) {
+    name
+    id
+    column_values{
+      id
+			value
+      text
+    }
+  }
+}
+        
+        */
+
+    // monday.storage.getItem().then((res) => {
+    //   console.log(res);
+    // });;
+    // })
+    // .catch((error) => {
+    //   console.error(error);
+    // });
   };
 
   return (
