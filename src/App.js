@@ -167,7 +167,7 @@ const App = () => {
         <section id="dropdown-section">
           <Dropdown
             ref={dropdownRef}
-            placeholder={"Choose your scents"}
+            placeholder={"Choose 3 scents"}
             options={scentValues}
             onChange={(event) => {
               setScents(event);
