@@ -12,6 +12,9 @@ import {
   Dropdown,
   Flex,
   Box,
+  AlertBanner,
+  AlertBannerText,
+  AlertBannerLink,
   Combobox,
   Heading,
 } from "monday-ui-react-core";
@@ -35,6 +38,10 @@ const App = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+
+  useEffect(() => {
+    console.log(scents);
+  }, [scents]);
 
   const scentValues = [
     {
@@ -140,6 +147,21 @@ const App = () => {
           <h1 id="candle-orders">Candle Orders</h1>
           <MondayLogo />
         </header>
+        {scents.length > 3 ? (
+          <Box marginBottom={Box.marginBottoms.LARGE}>
+            <AlertBanner
+              backgroundColor={AlertBanner.backgroundColors.WARNING}
+              bannerText="Please select only 3 scents"
+              className="monday-storybook-alert-banner_big-container"
+              linkText="this is a CTA"
+            >
+              <AlertBannerText text="Please select only 3 scents" />
+              {/* <AlertBannerLink href="https://monday.com" text="this is a CTA" /> */}
+            </AlertBanner>
+          </Box>
+        ) : (
+          <></>
+        )}
 
         <section id="input-section">
           <Box marginBottom={Box.marginBottoms.LARGE}>
@@ -265,8 +287,14 @@ const App = () => {
             placeholder={"Choose 3 scents"}
             options={scentValues}
             onChange={(event) => {
+              if (event === null) {
+                setScents([]);
+                return;
+              }
+
               setScents(event);
             }}
+            clearable
             //todo nice to have if validation onClick otherwise its fine
             multi
             multiline
