@@ -12,6 +12,7 @@ import {
   Dropdown,
   Flex,
   Box,
+  Tooltip,
   AlertBanner,
   AlertBannerText,
   AlertBannerLink,
@@ -148,15 +149,14 @@ const App = () => {
           <MondayLogo />
         </header>
         {scents.length > 3 ? (
-          <Box marginBottom={Box.marginBottoms.LARGE}>
+          <Box marginBottom={Box.marginBottoms.MEDIUM}>
             <AlertBanner
               backgroundColor={AlertBanner.backgroundColors.WARNING}
               bannerText="Please select only 3 scents"
               className="monday-storybook-alert-banner_big-container"
-              linkText="this is a CTA"
+              isCloseHidden
             >
               <AlertBannerText text="Please select only 3 scents" />
-              {/* <AlertBannerLink href="https://monday.com" text="this is a CTA" /> */}
             </AlertBanner>
           </Box>
         ) : (
