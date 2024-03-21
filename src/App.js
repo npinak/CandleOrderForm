@@ -100,15 +100,22 @@ const App = () => {
         data: newItemInfo.data.items[0],
         status: "Active",
       });
+      monday.execute("notice", {
+        message: "Ordered added to board",
+        type: "success",
+        timeout: 5000,
+      });
     } catch (error) {
       console.error(error);
     }
 
-    monday.execute("notice", {
-      message: "Ordered added to board",
-      type: "success",
-      timeout: 5000,
-    });
+    setFirstName("");
+    setLastName("");
+    setQuantity("");
+    setInscription("");
+    setEmail("");
+    setPhone("");
+    setAddress("");
   };
 
   return (
@@ -139,6 +146,7 @@ const App = () => {
                 <Box className="input">
                   <TextField
                     title="First Name"
+                    value={firstName}
                     placeholder="Enter Customer First Name"
                     onChange={(event) => {
                       setFirstName(event);
@@ -151,6 +159,7 @@ const App = () => {
                 <Box className="input" marginX={Box.marginXs.XL}>
                   <TextField
                     title="Last Name"
+                    value={lastName}
                     placeholder="Enter Customer Last Name"
                     onChange={(event) => {
                       setLastName(event);
@@ -163,6 +172,7 @@ const App = () => {
                 <Box className="input">
                   <TextField
                     title="Quantity"
+                    value={quantity}
                     placeholder="Enter Quantity"
                     requiredAsterisk={true}
                     required={true}
@@ -182,6 +192,7 @@ const App = () => {
                 <Box className="input">
                   <TextField
                     title="Email"
+                    value={email}
                     placeholder="Enter Email"
                     onChange={(event) => {
                       setEmail(event);
@@ -194,6 +205,7 @@ const App = () => {
                 <Box className="input" marginX={Box.marginXs.XL}>
                   <TextField
                     title="Phone"
+                    value={phone}
                     placeholder="Enter Phone Number"
                     onChange={(event) => {
                       setPhone(event);
@@ -206,10 +218,12 @@ const App = () => {
                 <Box className="input">
                   <TextField
                     title="Inscription"
+                    value={inscription}
                     placeholder="Enter Inscription"
                     onChange={(event) => {
                       setInscription(event);
                     }}
+                    value={inscription}
                     size={TextField.sizes.LARGE}
                     type={TextField.types.TEXT}
                     className="input"
@@ -220,6 +234,7 @@ const App = () => {
             <Box>
               <TextField
                 title="Address"
+                value={address}
                 placeholder="Enter Address"
                 onChange={(event) => {
                   setAddress(event);
