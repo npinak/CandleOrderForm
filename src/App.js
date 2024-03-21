@@ -5,6 +5,7 @@ import { doc, setDoc } from "firebase/firestore";
 import "./App.css";
 import mondaySdk from "monday-sdk-js";
 import "monday-ui-react-core/dist/main.css";
+import MondayLogo from "./images/monday-ar21";
 import {
   Button,
   TextField,
@@ -12,11 +13,13 @@ import {
   Flex,
   Box,
   Combobox,
+  Heading,
 } from "monday-ui-react-core";
 
-//todo get values from the boxes -- shipping, email, phone, inscription
 //todo validation for phone, email,
 //todo implement undo functionality if time
+//todo add firebase api to env
+//done todo  get values from the boxes -- shipping, email, phone, inscription
 //done todo update database when board is updated
 
 const monday = mondaySdk();
@@ -122,11 +125,22 @@ const App = () => {
     } catch (error) {
       console.error(error);
     }
+
+    monday.execute("notice", {
+      message: "Ordered added to board!",
+      type: "success",
+      timeout: 5000,
+    });
   };
 
   return (
     <div className="App">
       <main id="main-section">
+        <header id="header">
+          <h1 id="candle-orders">Candle Orders</h1>
+          <MondayLogo />
+        </header>
+
         <section id="input-section">
           <Box marginBottom={Box.marginBottoms.LARGE}>
             <Box marginBottom={Box.marginBottoms.MEDIUM}>
@@ -163,8 +177,8 @@ const App = () => {
                   <TextField
                     title="Quantity"
                     placeholder="Enter Quantity"
-                    // requiredAsterisk={true}
-                    // required={true}
+                    requiredAsterisk={true}
+                    required={true}
                     onChange={(event) => {
                       setQuantity(event);
                     }}

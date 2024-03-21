@@ -11,9 +11,19 @@ body {
   justify-content: center;
 }
 
+#header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+#candle-orders {
+  margin-right: 20px;
+}
+
 #main-section {
   width: 80%;
-  height: 50%;
+  height: 70%;
 }
 
 #order-form {
