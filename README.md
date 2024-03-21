@@ -2,4 +2,4 @@
 
 Candle Ordering form for Monday.com
 
-![Candle Order Submission Form](src/images/formPicture.png)
+![Candle Order Submission Form](./src/images/formPicture.png)
