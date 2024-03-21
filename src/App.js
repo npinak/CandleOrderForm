@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { db } from "./utils/firebase";
-import { collection, addDoc, doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import "./App.css";
 import mondaySdk from "monday-sdk-js";
 import "monday-ui-react-core/dist/main.css";
@@ -14,17 +14,12 @@ import {
   Combobox,
 } from "monday-ui-react-core";
 
-/* 
-
-mutation {
-  create_item (board_id: 6274044724, group_id: "topics", item_name: "new item", column_values: "{\"text5\":\"Another Time\"}") {
-    id
-  }
-} --- this is the format for creating new items 
-*/
+//todo get values from the boxes -- shpping, email, phone, inscription
+//todo validation
+//todo update database when board is updated
 
 const monday = mondaySdk();
-monday.setApiVersion();
+monday.setApiVersion("2024-04");
 
 const App = () => {
   const [context, setContext] = useState();
@@ -68,18 +63,15 @@ const App = () => {
   useEffect(() => {
     monday.execute("valueCreatedForUser");
 
-    monday.listen("context", (res) => {
-      setContext(res.data);
-    }); // todo might not be needed
+    // monday.listen("context", (res) => {
+    //   setContext(res.data);
+    // }); // todo might not be needed
     monday.get("context").then((res) => {
       setBoardID(res.data.boardId);
     });
   }, []);
 
   const createNewEntry = async () => {
-    //todo get values from the boxes
-    //todo validation
-
     // if (scents.length !== 3) {
     //   monday.execute("notice", {
     //     message: "Please choose 3 scents",
@@ -94,8 +86,6 @@ const App = () => {
     const orderReceivedDate = new Date().toLocaleDateString("en-CA");
     const orderStatus = 0;
     const scentProfiles = scents.map((scent) => scent.value);
-
-    //todo add to database
 
     try {
       const createResponse = await monday.api(
@@ -116,57 +106,15 @@ const App = () => {
             }
           }`);
 
-      const docRef = await setDoc(doc(db, `${boardID}`, `${orderID}`), {
-        data: newItemInfo.data,
-      });
+      console.log(newItemInfo.data.items[0]);
 
-      console.log("saved");
-      console.log(docRef); //todo delete
+      await setDoc(doc(db, `${boardID}`, `${orderID}`), {
+        data: newItemInfo.data.items[0],
+        status: "Active",
+      });
     } catch (error) {
       console.error(error);
     }
-
-    // .then((res) => {
-    //   orderID = res.data.create_item.id;
-
-    //   // get from board
-
-    //   monday.api(`query {
-    //                 items (ids: [${orderID}]) {
-    //                   name
-    //                   id
-    //                   column_values{
-    //                     id
-    //                     value
-    //                     text
-    //                   }
-    //                 }
-    //               }`);
-
-    // store in database
-
-    /* 
-        query {
-  items (ids: [6293242150]) {
-    name
-    id
-    column_values{
-      id
-			value
-      text
-    }
-  }
-}
-        
-        */
-
-    // monday.storage.getItem().then((res) => {
-    //   console.log(res);
-    // });;
-    // })
-    // .catch((error) => {
-    //   console.error(error);
-    // });
   };
 
   return (
