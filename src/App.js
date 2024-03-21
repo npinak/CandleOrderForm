@@ -234,7 +234,7 @@ const App = () => {
           <Dropdown
             size={Dropdown.size.LARGE}
             ref={dropdownRef}
-            requiredAsterisk={true}
+            requiredAsteris={true}
             required={true}
             placeholder={"Choose 3 scents"}
             options={fragrance}
