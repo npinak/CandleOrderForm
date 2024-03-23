@@ -87,14 +87,14 @@ const App = () => {
       const newItemInfo = await monday.api(`query {items (ids: [${orderID}])
         {
           name
+          id
+          column_values{
               id
-              column_values{
-                id
-                value
-                text
-              }
-            }
-          }`);
+              value
+              text
+            }  
+          }
+        }`);
 
       await setDoc(doc(db, `${boardID}`, `${orderID}`), {
         data: newItemInfo.data.items[0],
